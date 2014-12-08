@@ -1,4 +1,3 @@
-afterburner-forge-addon
+AfterBurner Forge Addon
 =======================
 
-afterburner-forge-addon

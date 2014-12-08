@@ -1,0 +1,1 @@
+package org.afterburner.forge.addon;
