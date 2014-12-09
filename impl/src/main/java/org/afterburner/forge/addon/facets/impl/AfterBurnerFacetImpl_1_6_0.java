@@ -15,7 +15,8 @@
  */
 package org.afterburner.forge.addon.facets.impl;
 
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +24,7 @@ import javax.inject.Inject;
 
 import org.afterburner.forge.addon.facets.AbstractAfterBurnerFacet;
 import org.jboss.forge.addon.dependencies.Dependency;
+import org.jboss.forge.addon.dependencies.builder.DependencyBuilder;
 import org.jboss.forge.addon.projects.dependencies.DependencyInstaller;
 import org.jboss.forge.furnace.versions.SingleVersion;
 import org.jboss.forge.furnace.versions.Version;
@@ -42,9 +44,11 @@ public class AfterBurnerFacetImpl_1_6_0 extends AbstractAfterBurnerFacet {
 	@Override
 	protected Map<Dependency, List<Dependency>> getRequiredDependencyOptions() {
 
-		Map<Dependency, List<Dependency>> dependency = new HashMap<Dependency, List<Dependency>>();
-
-		return dependency;
+		Map<Dependency, List<Dependency>> result = new LinkedHashMap<>();
+		Dependency AFTERBURNER_PROVIDED = DependencyBuilder.create(
+				AFTERBURNER_DEPENDENCY).setVersion("1.6.0");
+		result.put(AFTERBURNER_PROVIDED, Arrays.asList(AFTERBURNER_PROVIDED));
+		return result;
 	}
 
 	@Override

@@ -79,9 +79,11 @@ public class SetupWizard extends AbstractAfterBurnerCommand {
 		final MetadataFacet facet = project.getFacet(MetadataFacet.class);
 		facet.getProjectProvider();
 
-		if (facetFactory.install(getSelectedProject(context.getUIContext()),
-				abVersion.getValue())) {
-			return Results.success("AfterBurner has been installed.");
+		AfterBurnerFacet myFacet = abVersion.getValue();
+		if (facetFactory.install(project, myFacet)) {
+			return Results.success("AfterBurner " + myFacet.getSpecVersion()
+					+ " has been installed  in project "
+					+ project.getRoot().getName() + ".");
 		}
 		return Results.fail("Could not install AfterBurner.");
 	}
@@ -90,8 +92,8 @@ public class SetupWizard extends AbstractAfterBurnerCommand {
 	public UICommandMetadata getMetadata(UIContext context) {
 		return Metadata
 				.from(super.getMetadata(context), getClass())
-				.name("AfterBurner: Setup Project")
-				.description("Setup a AfterBurner project")
+				.name("AfterBurner: Setup")
+				.description("Setup a AfterBurner FX project")
 				.category(
 						Categories.create(super.getMetadata(context)
 								.getCategory(), "AfterBurner"));

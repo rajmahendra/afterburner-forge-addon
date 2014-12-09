@@ -15,6 +15,7 @@
  */
 package org.afterburner.forge.addon.facets;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -39,7 +40,7 @@ public abstract class AbstractAfterBurnerFacet extends AbstractFacet<Project>
 
 	protected static final Dependency AFTERBURNER_DEPENDENCY = DependencyBuilder
 			.create().setGroupId("com.airhacks")
-			.setArtifactId("afterburner.fx").setVersion("1.6.0");
+			.setArtifactId("afterburner.fx");
 
 	private final DependencyInstaller installer;
 
@@ -62,22 +63,31 @@ public abstract class AbstractAfterBurnerFacet extends AbstractFacet<Project>
 	}
 
 	private void addRequiredDependency() {
-		boolean isInstalled = false;
-		DependencyFacet dependencyFacet = origin
-				.getFacet(DependencyFacet.class);
+
+		DependencyFacet deps = origin.getFacet(DependencyFacet.class);
 		for (Entry<Dependency, List<Dependency>> group : getRequiredDependencyOptions()
 				.entrySet()) {
+			boolean satisfied = false;
 			for (Dependency dependency : group.getValue()) {
-				if (dependencyFacet.hasEffectiveDependency(dependency)) {
-					isInstalled = true;
+				if (deps.hasEffectiveDependency(dependency)) {
+					satisfied = true;
 					break;
 				}
 			}
-			if (!isInstalled) {
-				installer.installManaged(origin, AFTERBURNER_DEPENDENCY);
+
+			if (!satisfied) {
+				for (Dependency dependency : getRequiredManagedDependenciesFor(group
+						.getKey())) {
+					installer.installManaged(origin, dependency);
+				}
 				installer.install(origin, group.getKey());
 			}
 		}
+	}
+
+	protected Iterable<Dependency> getRequiredManagedDependenciesFor(
+			Dependency dependency) {
+		return Collections.singleton(AFTERBURNER_DEPENDENCY);
 	}
 
 	protected boolean isDependencyRequirementsMet() {
